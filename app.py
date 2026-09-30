@@ -2,12 +2,13 @@ import streamlit as st
 from vina import Vina
 import os
 
+st.set_page_config(page_title="AutoDock Vina Web App", page_icon="🧬")
 st.title("🧬 AutoDock Vina Web App")
-st.write("Scripps AutoDock Vina Engine ko use karte hue online molecular docking karein.")
+st.write("Perform online molecular docking using the official Scripps AutoDock Vina Engine.")
 
-# Files upload karne ke options
-receptor_file = st.file_uploader("1. Apni Receptor PDBQT File Upload Karein (.pdbqt)", type=["pdbqt"])
-ligand_file = st.file_uploader("2. Apni Ligand PDBQT File Upload Karein (.pdbqt)", type=["pdbqt"])
+# File Uploader Section
+receptor_file = st.file_uploader("1. Upload Receptor PDBQT File (.pdbqt)", type=["pdbqt"])
+ligand_file = st.file_uploader("2. Upload Ligand PDBQT File (.pdbqt)", type=["pdbqt"])
 
 st.subheader("Grid Box Settings (Binding Pocket)")
 col1, col2, col3 = st.columns(3)
@@ -25,31 +26,31 @@ exhaustiveness = st.slider("Exhaustiveness (Accuracy)", min_value=4, max_value=1
 
 if st.button("🚀 Start Docking"):
     if receptor_file and ligand_file:
-        with st.spinner("Docking chal rahi hai... Bara-e-maharbani thora intezar karein..."):
+        with st.spinner("Docking in progress... Please wait a moment..."):
             try:
-                # Files ko temporary save karna taake Vina parh sake
+                # Save uploaded files temporarily
                 with open("receptor.pdbqt", "wb") as f:
                     f.write(receptor_file.getbuffer())
                 with open("ligand.pdbqt", "wb") as f:
                     f.write(ligand_file.getbuffer())
                 
-                # Scripps AutoDock Vina Engine ko initialize karna
+                # Initialize AutoDock Vina Engine
                 v = Vina(sf_name='vina')
                 v.set_receptor('receptor.pdbqt')
                 v.set_ligand_from_file('ligand.pdbqt')
                 
-                # Grid box setup karna
+                # Setup Grid Box Maps
                 v.compute_vina_maps(center=[cx, cy, cz], size=[sx, sy, sz])
                 
-                # Docking run karna
+                # Execute Docking
                 v.dock(exhaustiveness=exhaustiveness, n_poses=9)
                 
-                # Results save karna
+                # Save Poses to File
                 v.write_poses('output_poses.pdbqt', n_poses=9, overwrite=True)
                 
-                st.success("🎉 Docking Mukammal Ho Gayi!")
+                st.success("🎉 Docking Completed Successfully!")
                 
-                # Output file download karne ka button
+                # Download Button for Results
                 with open("output_poses.pdbqt", "rb") as f:
                     st.download_button(
                         label="📥 Download Docking Results (.pdbqt)",
@@ -58,6 +59,6 @@ if st.button("🚀 Start Docking"):
                         mime="text/plain"
                     )
             except Exception as e:
-                st.error(f"Koi masla aaya hai: {str(e)}")
+                st.error(f"An error occurred: {str(e)}")
     else:
-        st.warning("Bara-e-maharbani Receptor aur Ligand dono files upload karein.")
+        st.warning("Please upload both Receptor and Ligand files to proceed.")
