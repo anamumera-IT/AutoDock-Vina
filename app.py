@@ -40,7 +40,7 @@ if st.button("🚀 Start Docking"):
                 v.set_ligand_from_file('ligand.pdbqt')
                 
                 # Setup Grid Box Maps
-                v.compute_vina_maps(center=[cx, cy, cz], size=[sx, sy, sz])
+                v.compute_vina_maps(center=[cx, cy, cz], box_size=[sx, sy, sz])
                 
                 # Execute Docking
                 v.dock(exhaustiveness=exhaustiveness, n_poses=9)
