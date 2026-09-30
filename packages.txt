@@ -1,1 +1,2 @@
 swig
+libboost-all-dev
