@@ -4,7 +4,7 @@ import os
 
 st.set_page_config(page_title="AutoDock Vina Web App", page_icon="🧬")
 st.title("🧬 AutoDock Vina Web App")
-st.write("Perform online molecular docking using the official Scripps AutoDock Vina Engine.")
+st.write("Perform online molecular docking using the official Scripps AutoDock Vina.")
 
 # File Uploader Section
 receptor_file = st.file_uploader("1. Upload Receptor PDBQT File (.pdbqt)", type=["pdbqt"])
